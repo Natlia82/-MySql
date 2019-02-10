@@ -4,13 +4,9 @@ $tablica = $_GET['tabl'];
 }
 else echo "ошибка передачи";
 
-try {
-    $dbcon = new PDO("mysql:host=localhost;dbname=dbc;charset=utf8", "root", "");
-    $dbcon->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-      }
-    catch(PDOException $e) {
-      echo 'Ошибка: ' . $e->getMessage();
-     }
+include 'connect.php';
+coonSQL();
+
      //запрос таблицы
        $tableList = array();
           $result = $dbcon->query("SHOW FULL COLUMNS FROM $tablica");
@@ -21,7 +17,7 @@ try {
               $nam = $value;
               echo "<a href='insert.php?tab=$tablica&pole=$value'>$value</a>"." ";
               $i=$i+1;
-            } 
+            }
              else  {echo $value." ";
               $i=$i+1;}
             }
@@ -41,4 +37,5 @@ try {
 <body>
   <form action="" method="post">
   </form>
+  <a href="table.php">Вернуться к списку таблиц</a>
 </body>

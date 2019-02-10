@@ -1,4 +1,4 @@
-﻿<?php 
+﻿<?php
 //echo "insert";
 if (isset($_GET['tab']) and isset($_GET['pole']) ) {
 $tablica = $_GET['tab'];
@@ -6,16 +6,31 @@ $pole= $_GET['pole'];
 }
 else echo "ошибка передачи";
 
-echo 'Что будем делать с полем? '.$pole.' из таблицы'.$tablica;
-try {
-    $dbcon = new PDO("mysql:host=localhost;dbname=dbc;charset=utf8", "root", "");
-    $dbcon->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-      }
-    catch(PDOException $e) {
-      echo 'Ошибка: ' . $e->getMessage();
-     }
-	 
+include 'connect.php';
+coonSQL();
 
+if (isset( $_POST['submit1'] )) {
+  $sql = "ALTER TABLE $tablica DROP COLUMN $pole";
+    $dbcon->exec($sql);
+//  header('Location: tabl2.php');
+echo '<meta http-equiv="refresh" content="0;URL=table.php">';
+}
+if (isset( $_POST['submit2'] )) {
+  $newname = $_POST['text'];
+  $sql = "ALTER TABLE $tablica CHANGE $pole $newname VARCHAR(50);";
+    $dbcon->exec($sql);
+//header('Location: tabl2.php');
+echo '<meta http-equiv="refresh" content="0;URL=table.php">';
+}
+if (isset( $_POST['submit3'] )) {
+  $tip = $_POST['text2'];
+  $sql = "ALTER TABLE $tablica MODIFY $pole $tip NOT NULL;";
+    $dbcon->exec($sql);
+//header('Location: tabl2.php');
+echo '<meta http-equiv="refresh" content="0;URL=table.php">';
+
+}
+echo 'Что будем делать с полем? '.$pole.' из таблицы'.$tablica;
 ?>
 
 <!DOCTYPE html>
@@ -29,24 +44,14 @@ try {
    <br>
   <form action="" method="post">
   <button type='submit' name='submit1'>Удалить</button>
+  <br>
+  <input type="text" name="text">
   <button type='submit' name='submit2'>Переименовать</button>
+  <br>
+  <input type="text" name="text2">
   <button type='submit' name='submit3'>Пометять тип</button>
-  <?php
-  if (isset( $_POST['submit1'] )) {
-	  $sql = "ALTER TABLE $tablica DROP COLUMN $pole;";
-      $dbcon->exec($sql);
-	  
-  }	
-  if (isset( $_POST['submit2'] )) {
-	  $sql = "ALTER TABLE $tablica CHANGE $pole model VARCHAR(50);";
-      $dbcon->exec($sql);
-      
-}	
-if (isset( $_POST['submit3'] )) {
-	  $sql = "ALTER TABLE $tablica MODIFY $pole FLOAT NOT NULL;";
-      $dbcon->exec($sql);
-      
-}	
-  ?>
+
+  <br>
+  <a href="tab2.php?tabl=<?php echo $tablica; ?>">вернуться к списку полей</a>
   </form>
 </body>

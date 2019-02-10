@@ -1,14 +1,6 @@
 ﻿<?php
-try {
-    $dbcon = new PDO("mysql:host=localhost;dbname=dbc;charset=utf8", "root", "");
-    $dbcon->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
-      }
-
- catch(PDOException $e) {
-    echo 'Ошибка: ' . $e->getMessage();
-}
-
+include 'connect.php';
+coonSQL();
  ?>
 
 
@@ -21,7 +13,7 @@ try {
 </head>
 <body>
 <?php  //запрос таблицы
-  $tableList = array();
+     $tableList = array();
      $result = $dbcon->query("SHOW TABLES");
      while ($row = $result->fetch(PDO::FETCH_NUM)) {
          $tableList[] = $row[0];
@@ -34,5 +26,9 @@ foreach ($tableList as $value) {
 }
 
 ?>
+<br>
+<br>
+<a href="create.php">Добавить таблицу</a>
+
 </body>
 </html>
